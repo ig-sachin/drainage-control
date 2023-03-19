@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from './Home';
 import MultiStepForm from "./MultiStepForm";
 import "./style.css";
+import ListComplain from './ListComplain';
 
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/complaint" element={<MultiStepForm />} />
+          <Route path="/list-complain" element={<ListComplain />} />
         </Routes>
       </div >
     </>

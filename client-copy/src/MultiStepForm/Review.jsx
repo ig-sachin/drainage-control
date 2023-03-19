@@ -2,10 +2,18 @@ import { Button, Col, Row } from "antd";
 import React, { useContext } from "react";
 import MultiStepFormContext from "./MultiStepFormContext";
 import axios from 'axios';
+import swal from 'sweetalert';
+import Cookies from "universal-cookie";
 
 const Review = () => {
   const { details, address, prev } = useContext(MultiStepFormContext);
+  const cookies = new Cookies();
+
   const submit = async () => {
+    if (!cookies.username && !cookies.email && !cookies.contact && !cookies.fullName) {
+      swal("Session Expired!!", "Please Login Again to Submit your complain", "warning").then(() => window.location.replace("http://localhost:3000/login"));
+      return;
+    }
     const data = {
       name: details.name,
       phoneNo: details.phoneNo,
@@ -16,7 +24,7 @@ const Review = () => {
     };
     await axios({ method: 'post', url: 'http://localhost:4040/complaint/submit-complaint', data }).then((res) => {
       if (res.status === 200) {
-        alert('Complaint Sent Successfully');
+        swal("Submitted", "You complaint has been successfully sent to the administrator", "success").then(() => window.location.replace('http://localhost:3000/'));
       }
     }).catch((err) => {
       console.log(err);

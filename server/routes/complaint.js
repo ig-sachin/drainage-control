@@ -1,5 +1,5 @@
 import express from 'express';
-import { submitComplaint } from '../controllers/complaint.js';
+import { submitComplaint, getComplain } from '../controllers/complaint.js';
 ;
 // this file will contain all the routes realted to posts
 const router = express.Router();
@@ -9,6 +9,8 @@ const router = express.Router();
 
 // this will get me all the posts
 router.post('/submit-complaint', submitComplaint);
+
+router.get('/get-complain', getComplain);
 
 
 export default router;

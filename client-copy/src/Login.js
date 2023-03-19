@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Paper, TextField } from '@material-ui/core';
 import Header from './Header/Header';
+import Cookies from 'universal-cookie';
+import swal from 'sweetalert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
     const classes = useStyles();
-    const navigate = useNavigate();
+    const cookies = new Cookies();
     const [form, setForm] = useState({
         username: '',
         password: '',
@@ -46,21 +48,23 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Submitting', form);
-        await axios({
-            method: 'post',
-            url: 'http://localhost:4040/users/login',
-            data: form,
-        })
-            .then((res) => {
-                if (res.status === 200) {
-                    window.location.reload();
-                    alert('User Login Successfully');
-                    navigate('/');
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        await axios({ method: 'post', url: 'http://localhost:4040/users/login', data: form }).then((res) => {
+            if (res.status === 200) {
+                const user = res.data.user;
+                cookies.set('username', user.username);
+                cookies.set('email', user.email);
+                cookies.set('contact', user.mobileNo);
+                cookies.set('fullName', user.fullName);
+                cookies.set('isAdmin', user.isAdmin);
+                console.log(user);
+                swal("Login Successful", "", "success").then(() => window.location.replace("http://localhost:3000"));
+            } else {
+                swal("Error!", res.data.message, "error");
+            }
+        }).catch((err) => {
+            console.log(err.response.data);
+            swal("Error!", err.response.data.message, "error");
+        });
     };
     return (
         <>

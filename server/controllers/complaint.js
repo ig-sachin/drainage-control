@@ -12,3 +12,8 @@ export const submitComplaint = async (req, res) => {
         res.status(409).json({ message: error.message });
     }
 }
+
+export const getComplain = async (req, res) => {
+    const data = await Complaint.find({});
+    return res.status(200).send(data);
+}

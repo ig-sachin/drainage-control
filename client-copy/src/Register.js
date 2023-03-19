@@ -7,8 +7,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { Card, CardContent, Typography } from '@material-ui/core';
+import { Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core';
 import Header from './Header/Header';
+import swal from 'sweetalert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,10 +58,6 @@ const Register = () => {
         console.log(form);
     };
 
-    const handleCheckBox = (e) => {
-        setForm({ ...form, isAdmin: e.target.checked });
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Submitting', form);
@@ -70,13 +67,39 @@ const Register = () => {
             data: form,
         }).then((res) => {
             if (res.status === 201) {
-                window.location.reload();
-                alert('User Created Successfully');
+                swal("User Registered Successfully", "Please Login with username and password", "success").then(() => window.location.replace('http://localhost:3000/login'));
             }
         }).catch((err) => {
             console.log(err);
         });
     };
+
+    const [open, setOpen] = useState(false);
+    const [password, setPassword] = useState('');
+    const [checked, setChecked] = useState(false);
+
+    const handleCheckboxChange = () => {
+        if (password === 'admin') {
+            setChecked(!checked);
+            setForm({ ...form, isAdmin: true });
+            handleClose();
+        } else {
+            swal("Error!", "Incorrect Security Code", "error");
+        }
+    };
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <>
             <Header />
@@ -91,71 +114,30 @@ const Register = () => {
                                 <form onSubmit={handleSubmit}>
                                     <Grid container spacing={3}>
                                         <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                required
-                                                id="fullName"
-                                                name="fullName"
-                                                label="Full Name"
-                                                value={form.fullName}
-                                                onChange={handleChange}
-                                                fullWidth
-                                            />
+                                            <TextField required id="fullName" name="fullName" label="Full Name" value={form.fullName} onChange={handleChange} fullWidth />
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
-                                            <TextField
-                                                required
-                                                id="username"
-                                                name="username"
-                                                label="Username"
-                                                value={form.username}
-                                                onChange={handleChange}
-                                                fullWidth
-                                            />
+                                            <TextField required id="username" name="username" label="Username" value={form.username} onChange={handleChange} fullWidth />
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <TextField
-                                                required
-                                                id="password"
-                                                name="password"
-                                                label="Password"
-                                                type="password"
-                                                value={form.password}
-                                                onChange={handleChange}
-                                                fullWidth
-                                            />
+                                            <TextField required id="password" name="password" label="Password" type="password" value={form.password} onChange={handleChange} fullWidth />
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <TextField
-                                                required
-                                                id="email"
-                                                name="email"
-                                                label="Email Address"
-                                                type="email"
-                                                value={form.email}
-                                                onChange={handleChange}
-                                                fullWidth
-                                            />
+                                            <TextField required id="email" name="email" label="Email Address" type="email" value={form.email} onChange={handleChange} fullWidth />
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <TextField
-                                                required
-                                                id="mobileNo"
-                                                name="mobileNo"
-                                                label="Mobile Number"
-                                                value={form.mobileNo}
-                                                onChange={handleChange}
-                                                fullWidth
-                                            />
+                                            <TextField required id="mobileNo" name="mobileNo" label="Mobile Number" value={form.mobileNo} onChange={handleChange} fullWidth />
                                         </Grid>
                                         <Grid item xs={12}>
-                                            <FormControlLabel
-                                                control={<Checkbox color="primary" />}
-                                                label="Are you Admin"
-                                                labelPlacement="end"
-                                                name="isAdmin"
-                                                checked={form.isAdmin}
-                                                onChange={handleCheckBox}
-                                            />
+                                            <FormControlLabel control={<Checkbox color="primary" />} label="Are you Admin" labelPlacement="end" name="isAdmin" checked={checked} onClick={() => {
+                                                if (checked) {
+                                                    setOpen(false);
+                                                    setPassword('');
+                                                    setChecked(false);
+                                                } else {
+                                                    handleClickOpen();
+                                                }
+                                            }} />
                                         </Grid>
                                         <Grid item xs={12}>
                                             <Button variant="contained" color="primary" type="submit" style={{ marginRight: '1rem' }}>
@@ -171,6 +153,16 @@ const Register = () => {
                         </Card>
                     </Grid>
                 </Grid>
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Enter security code to verify you are Admin</DialogTitle>
+                    <DialogContent>
+                        <TextField autoFocus margin="dense" label="Security-Code" type="password" value={password} onChange={handlePasswordChange} fullWidth />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleCheckboxChange}>OK</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </>
     );

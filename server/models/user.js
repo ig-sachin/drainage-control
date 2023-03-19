@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 // creating model for post
 const userSchema = mongoose.Schema({
-    username: String,
+    username: { type: String, unique: true },
     password: String,
     fullName: String,
-    email: String,
-    mobileNo: String,
-    isAdmin: Boolean,
+    email: { type: String, unique: true },
+    mobileNo: { type: String, unique: true },
+    isAdmin: { type: Boolean, default: false },
 });
 
 // creating schema to model
