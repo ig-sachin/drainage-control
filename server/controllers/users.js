@@ -3,7 +3,7 @@ import UserMessage from "../models/user.js";
 export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
         // Check if username exists in the database
         const user = await UserMessage.findOne({ username });
         if (!user) {
@@ -22,7 +22,7 @@ export const login = async (req, res) => {
 
 export const createUser = async (req, res) => {
     const user = req.body;
-    console.log(user);
+    // console.log(user);
     const newUser = new UserMessage(user);
     try {
         await newUser.save();

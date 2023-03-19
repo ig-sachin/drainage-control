@@ -10,7 +10,7 @@ const Review = () => {
   const cookies = new Cookies();
 
   const submit = async () => {
-    if (!cookies.username && !cookies.email && !cookies.contact && !cookies.fullName) {
+    if (!cookies.get('username') && !cookies.get('email') && !cookies.get('contact') && !cookies.get('fullName')) {
       swal("Session Expired!!", "Please Login Again to Submit your complain", "warning").then(() => window.location.replace("http://localhost:3000/login"));
       return;
     }

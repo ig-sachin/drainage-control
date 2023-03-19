@@ -2,7 +2,7 @@ import Complaint from "../models/complaint.js";
 
 export const submitComplaint = async (req, res) => {
     const complaintBody = req.body;
-    console.log(complaintBody);
+    // console.log(complaintBody);
     const newComplaint = new Complaint(complaintBody);
     try {
         await newComplaint.save();

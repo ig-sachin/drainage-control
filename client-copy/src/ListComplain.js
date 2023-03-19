@@ -55,7 +55,7 @@ const ListComplain = () => {
         }
         fetch();
     }, []);
-    console.log(data);
+    // console.log(data);
     return (
         <>
             <Header />
